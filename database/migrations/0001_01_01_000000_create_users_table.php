@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\UserStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +14,22 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 50);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone');
+
+            // billing fields
+            $table->string('billing_name', 50);
+            $table->string('billing_tax_id', 20);
+            $table->string('billing_address_line');
+            $table->string('billing_province', 100);
+            $table->string('billing_locality', 100);
+            $table->string('billing_zipcode', 20);
+
+            $table->enum('status', UserStatusEnum::all())->default(UserStatusEnum::UNVERIFIED->value);
+
             $table->rememberToken();
             $table->timestamps();
         });
