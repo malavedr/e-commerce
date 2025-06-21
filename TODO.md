@@ -1,9 +1,9 @@
 # OBJETIVOS
-- Poder crear una orden por api y luego ver su detalle
+- Poder crear una orden por api
 - Poder ver el detalle de una orden
 
 # PUNTOS EXTRAS
-- Dcumentar api con open api
+- Documentar api con open api
 - Utilizar redis en alguna parte del proceso para evitar accesos a la db
 - Enviar email por medio de jobs
 - Utiliza Policies, Form Request, Traits, Service etc
@@ -12,19 +12,19 @@
 - Implementar laravel permission
 
 # PENDIENTES
-- Crear Modelos con todo y relaciones
-- Crear scopres de status, types etc ejemplo: scopeActive($query){return $query->where('status', true);}
-- Crear factories
-- Crear Seeders
-- Crear autneticación por api
+- Crear rutas
 - Crear controladores
-    - Crear rutas
-    - Crear controlador
-    - Crear form request
-    - Crear Policies
-    - 
+- Crear form request
+- Crear Policies
+- Crear autenticación por api
+- 
 
 # TERMINADOS
+- Crear factories
+- Crear Seeder de modelo user
+- Crear scopres de status, types etc ejemplo: scopeActive($query){return $query->where('status', true);}
+- Crear Seeders
+- Crear Modelos con todo y relaciones
 - Crear modelo entidad relación
 - Crear migraciones
 

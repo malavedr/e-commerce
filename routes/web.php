@@ -9,6 +9,5 @@ Route::get('/', function () {
 
 Route::get('/test', function () {
     $types = UserStatusEnum::BANNED; // This will trigger the enum to be loaded
-    print_r($types->value); // Example usage of the enum
-    echo 'Test route is working!';
+    print_r($types); // Example usage of the enum
 });

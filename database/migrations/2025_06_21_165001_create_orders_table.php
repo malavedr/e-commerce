@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('buyer_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('delivery_address_id')->constrained('delivery_addresses')->onDelete('restrict');
 
-            $table->decimal('subtotal', 12, 2)->default(0);
+            $table->decimal('sub_total', 12, 2)->default(0);
             $table->decimal('discount_total', 12, 2)->default(0);
             $table->decimal('tax_total', 12, 2)->default(0);
             $table->decimal('total', 12, 2)->default(0);
