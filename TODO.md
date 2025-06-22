@@ -12,6 +12,9 @@
 - Implementar laravel permission
 
 # PENDIENTES
+- Proceso completo de productos (Falta revizar todo)
+- no utilizar 'exception' => $e->getMessage(), en los exception del repositorio
+- ver que hago con ApiException
 - Crear rutas
 - Crear controladores
 - Crear form request
