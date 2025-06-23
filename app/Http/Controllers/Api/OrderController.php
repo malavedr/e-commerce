@@ -132,30 +132,30 @@ class OrderController extends Controller
      *             )
      *         )
      *     ),
-    * @OA\Response(
-    *     response=422,
-    *     description="Validation failed",
-    *     @OA\JsonContent(
-    *         oneOf={
-    *             @OA\Schema(
-    *                 example={
-    *                     "message": "You have already placed an order with the same products.",
-    *                     "errors": {
-    *                         "products": {"You have already placed an order with the same products."}
-    *                     }
-    *                 }
-    *             ),
-    *             @OA\Schema(
-    *                 example={
-    *                     "message": "The SKU must be unique across all products.",
-    *                     "errors": {
-    *                         "products": {"The SKU must be unique across all products."}
-    *                     }
-    *                 }
-    *             )
-    *         }
-    *     )
-    * )
+     * @OA\Response(
+     *     response=422,
+     *     description="Validation failed",
+     *     @OA\JsonContent(
+     *         oneOf={
+     *             @OA\Schema(
+     *                 example={
+     *                     "message": "You have already placed an order with the same products.",
+     *                     "errors": {
+     *                         "products": {"You have already placed an order with the same products."}
+     *                     }
+     *                 }
+     *             ),
+     *             @OA\Schema(
+     *                 example={
+     *                     "message": "The SKU must be unique across all products.",
+     *                     "errors": {
+     *                         "products": {"The SKU must be unique across all products."}
+     *                     }
+     *                 }
+     *             )
+     *         }
+     *     )
+     * )
      * )
      */
     public function store(StoreOrderRequest $request): JsonResponse
@@ -288,9 +288,9 @@ class OrderController extends Controller
      *     )
      * )
      */
-    public function show(int $order_id, OrderRepositoryInterface $repository): OrderResource
+    public function show($order_id, OrderRepositoryInterface $repository): OrderResource
     {
-        $order = $repository->findOrFail($order_id);
+        $order = $repository->findOrFail(intval($order_id));
         $this->authorize('view', $order);
 
         return new OrderResource($order);

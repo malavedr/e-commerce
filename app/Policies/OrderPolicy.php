@@ -40,7 +40,8 @@ class OrderPolicy
      */
     public function view(User $user, Order $order): bool
     {
-        return $user->hasRole([UserRoleEnum::ADMIN->value, UserRoleEnum::EDITOR->value]) || ($user->isActive() && $user->isOwner($order->buyer_id));
+        return $user->hasRole([UserRoleEnum::ADMIN->value, UserRoleEnum::EDITOR->value]) || 
+            ($user->isActive() && $user->isOwner($order->buyer_id));
     }
 
     /**
@@ -81,6 +82,7 @@ class OrderPolicy
      */
     public function delete(User $user, Order $order): bool
     {
-        return $user->hasRole([UserRoleEnum::ADMIN->value]) || ($user->isActive() && $user->isOwner($order->buyer_id));
+        return $user->hasRole([UserRoleEnum::ADMIN->value]) || 
+            ($user->isActive() && $user->isOwner($order->buyer_id));
     }
 }
