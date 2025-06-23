@@ -12,14 +12,16 @@
 - Implementar laravel permission                                            LISTO
 
 # PENDIENTES
-- domentar el resto de archivos
-- Documentar en open api
-- enviar mail al crear una orden
-- implementar redis en otro sitio
+- test productos
+- falta manual de instalacion
 - aplicar test a orders y products
-- validar bien el policy de orders
+- implementar redis en otro sitio
 
 # TERMINADOS
+- enviar mail al crear una orden
+- validar bien el policy de orders
+- Documentar en open api
+- domentar el resto de archivos
 - probar creacion de order con policy
 - probar show orden con policy
 - Probar product completo

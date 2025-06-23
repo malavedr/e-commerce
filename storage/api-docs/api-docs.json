@@ -1,0 +1,1357 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "E-commerce API",
+        "description": "API for El Diego e-commerce application",
+        "contact": {
+            "email": "diegomalave@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "Servidor principal"
+        }
+    ],
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Authenticate user and return access token",
+                "description": "Authenticate a user and return an access token.\n\nValidates the user credentials, revokes any previous tokens,\nand issues a new one along with user information.",
+                "operationId": "222b2625838e3c57e017987f73598fda",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "diego.admin.active@e-commerce.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "pasword"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful authentication",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully authenticated."
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "9|Mh1Rr1KpFbwBtUCjQkHy3qf6KqYsHjJ9SuxENCUq7e92df75"
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                },
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 6
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Diego User Suspended"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "diego.user.suspended@e-commerce.com"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "example": "+1-240-586-8422"
+                                                        },
+                                                        "billing_name": {
+                                                            "type": "string",
+                                                            "example": "Graciela Kassulke DVM"
+                                                        },
+                                                        "billing_tax_id": {
+                                                            "type": "string",
+                                                            "example": "08934014526"
+                                                        },
+                                                        "billing_address_line": {
+                                                            "type": "string",
+                                                            "example": "521 Marilyne Mission"
+                                                        },
+                                                        "billing_province": {
+                                                            "type": "string",
+                                                            "example": "New Mexico"
+                                                        },
+                                                        "billing_locality": {
+                                                            "type": "string",
+                                                            "example": "New Antoinette"
+                                                        },
+                                                        "billing_zipcode": {
+                                                            "type": "string",
+                                                            "example": "84876"
+                                                        },
+                                                        "status": {
+                                                            "type": "string",
+                                                            "example": "suspended"
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-06-23T13:06:36.000000Z"
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-06-23T13:06:36.000000Z"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "The credentials provided are invalid."
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout the currently authenticated user",
+                "description": "Logout the authenticated user by revoking the current token.",
+                "operationId": "ad65cbbd4e9f201619eae184a5961a98",
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully."
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You must be authenticated to access this resource."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/user": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get authenticated user profile",
+                "description": "Return the currently authenticated user's information.",
+                "operationId": "961ad57987905b44ae2e2f40b82e76de",
+                "responses": {
+                    "200": {
+                        "description": "Authenticated user retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Authenticated user retrieved successfully."
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Diego Admin Active"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "diego.admin.active@e-commerce.com"
+                                                },
+                                                "phone": {
+                                                    "type": "string",
+                                                    "example": "(414) 705-9913"
+                                                },
+                                                "billing_name": {
+                                                    "type": "string",
+                                                    "example": "Willie Stoltenberg"
+                                                },
+                                                "billing_tax_id": {
+                                                    "type": "string",
+                                                    "example": "84821789858"
+                                                },
+                                                "billing_address_line": {
+                                                    "type": "string",
+                                                    "example": "672 Morar Spurs Suite 625"
+                                                },
+                                                "billing_province": {
+                                                    "type": "string",
+                                                    "example": "New Jersey"
+                                                },
+                                                "billing_locality": {
+                                                    "type": "string",
+                                                    "example": "Treutelberg"
+                                                },
+                                                "billing_zipcode": {
+                                                    "type": "string",
+                                                    "example": "41710-8957"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "active"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T13:06:36.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T13:06:36.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You must be authenticated to access this resource."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1.0.0/orders": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create a new order",
+                "description": "Store a new order in the system.\n\nAuthorizes the request, prepares order data from validated input,\nand delegates the creation process to the OrderService.\nRolls back and unlocks resources in case of failure.",
+                "operationId": "0a35008e3b21171a631ebe364740a9c4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "products"
+                                ],
+                                "properties": {
+                                    "products": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "sku": {
+                                                    "type": "string",
+                                                    "example": "SKU-49005157"
+                                                },
+                                                "quantity": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Please deliver in the morning."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order created successfully."
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 201
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 38
+                                                },
+                                                "buyer": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Diego User Active"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "diego.user.active@e-commerce.com"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "example": "+1-660-653-6715"
+                                                        },
+                                                        "billing_name": {
+                                                            "type": "string",
+                                                            "example": "Gabrielle Hermann"
+                                                        },
+                                                        "billing_tax_id": {
+                                                            "type": "string",
+                                                            "example": "36019774668"
+                                                        },
+                                                        "billing_address_line": {
+                                                            "type": "string",
+                                                            "example": "299 Ruecker Keys"
+                                                        },
+                                                        "billing_province": {
+                                                            "type": "string",
+                                                            "example": "Indiana"
+                                                        },
+                                                        "billing_locality": {
+                                                            "type": "string",
+                                                            "example": "Port Myrtle"
+                                                        },
+                                                        "billing_zipcode": {
+                                                            "type": "string",
+                                                            "example": "00131"
+                                                        },
+                                                        "status": {
+                                                            "type": "string",
+                                                            "example": "active"
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-06-23T13:06:36.000000Z"
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-06-23T13:06:36.000000Z"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "delivery_address": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "line": {
+                                                            "type": "string",
+                                                            "example": "817 Aida Bypass Apt. 704"
+                                                        },
+                                                        "locality": {
+                                                            "type": "string",
+                                                            "example": "Port Wadetown"
+                                                        },
+                                                        "province": {
+                                                            "type": "string",
+                                                            "example": "Maryland"
+                                                        },
+                                                        "zipcode": {
+                                                            "type": "string",
+                                                            "example": "18663-4557"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "sub_total": {
+                                                    "type": "string",
+                                                    "example": "6306.73"
+                                                },
+                                                "discount_total": {
+                                                    "type": "string",
+                                                    "example": "0.00"
+                                                },
+                                                "tax_total": {
+                                                    "type": "string",
+                                                    "example": "0.00"
+                                                },
+                                                "total": {
+                                                    "type": "string",
+                                                    "example": "6306.73"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "pending"
+                                                },
+                                                "payment_status": {
+                                                    "type": "string",
+                                                    "example": "unpaid"
+                                                },
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "product": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer",
+                                                                        "example": 44
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "example": "quam eos dicta"
+                                                                    },
+                                                                    "sku": {
+                                                                        "type": "string",
+                                                                        "example": "SKU-49005157"
+                                                                    },
+                                                                    "price": {
+                                                                        "type": "string",
+                                                                        "example": "227.60"
+                                                                    },
+                                                                    "description": {
+                                                                        "type": "string",
+                                                                        "example": "Qui nobis recusandae beatae et maiores."
+                                                                    },
+                                                                    "created_at": {
+                                                                        "type": "string",
+                                                                        "format": "date-time",
+                                                                        "example": "2025-06-23T13:06:36+00:00"
+                                                                    },
+                                                                    "updated_at": {
+                                                                        "type": "string",
+                                                                        "format": "date-time",
+                                                                        "example": "2025-06-23T13:06:36+00:00"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "quantity": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            },
+                                                            "unit_price": {
+                                                                "type": "string",
+                                                                "example": "227.60"
+                                                            },
+                                                            "total_price": {
+                                                                "type": "string",
+                                                                "example": "1138.00"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "shipped_at": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "delivered_at": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "canceled_at": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T17:45:53.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "example": {
+                                                "message": "You have already placed an order with the same products.",
+                                                "errors": {
+                                                    "products": [
+                                                        "You have already placed an order with the same products."
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "example": {
+                                                "message": "The SKU must be unique across all products.",
+                                                "errors": {
+                                                    "products": [
+                                                        "The SKU must be unique across all products."
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1.0.0/orders/{order_id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get a specific order by ID",
+                "description": "Display the specified order.\n\nAuthorizes the user to view the order and fetches it from the repository.",
+                "operationId": "9d5a978fe51d48e29fbbc98f3c69a721",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "description": "ID of the order to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 36
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 36
+                                                },
+                                                "buyer": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Diego User Active"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "diego.user.active@e-commerce.com"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string",
+                                                            "example": "+1-660-653-6715"
+                                                        },
+                                                        "billing_name": {
+                                                            "type": "string",
+                                                            "example": "Gabrielle Hermann"
+                                                        },
+                                                        "billing_tax_id": {
+                                                            "type": "string",
+                                                            "example": "36019774668"
+                                                        },
+                                                        "billing_address_line": {
+                                                            "type": "string",
+                                                            "example": "299 Ruecker Keys"
+                                                        },
+                                                        "billing_province": {
+                                                            "type": "string",
+                                                            "example": "Indiana"
+                                                        },
+                                                        "billing_locality": {
+                                                            "type": "string",
+                                                            "example": "Port Myrtle"
+                                                        },
+                                                        "billing_zipcode": {
+                                                            "type": "string",
+                                                            "example": "00131"
+                                                        },
+                                                        "status": {
+                                                            "type": "string",
+                                                            "example": "active"
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-06-23T13:06:36.000000Z"
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2025-06-23T13:06:36.000000Z"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "delivery_address": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "line": {
+                                                            "type": "string",
+                                                            "example": "817 Aida Bypass Apt. 704"
+                                                        },
+                                                        "locality": {
+                                                            "type": "string",
+                                                            "example": "Port Wadetown"
+                                                        },
+                                                        "province": {
+                                                            "type": "string",
+                                                            "example": "Maryland"
+                                                        },
+                                                        "zipcode": {
+                                                            "type": "string",
+                                                            "example": "18663-4557"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "sub_total": {
+                                                    "type": "string",
+                                                    "example": "3865.34"
+                                                },
+                                                "discount_total": {
+                                                    "type": "string",
+                                                    "example": "0.00"
+                                                },
+                                                "tax_total": {
+                                                    "type": "string",
+                                                    "example": "0.00"
+                                                },
+                                                "total": {
+                                                    "type": "string",
+                                                    "example": "3865.34"
+                                                },
+                                                "notes": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "pending"
+                                                },
+                                                "payment_status": {
+                                                    "type": "string",
+                                                    "example": "unpaid"
+                                                },
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "product": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer",
+                                                                        "example": 44
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "example": "quam eos dicta"
+                                                                    },
+                                                                    "sku": {
+                                                                        "type": "string",
+                                                                        "example": "SKU-49005157"
+                                                                    },
+                                                                    "price": {
+                                                                        "type": "string",
+                                                                        "example": "227.60"
+                                                                    },
+                                                                    "description": {
+                                                                        "type": "string",
+                                                                        "example": "Qui nobis recusandae beatae et maiores.",
+                                                                        "nullable": true
+                                                                    },
+                                                                    "created_at": {
+                                                                        "type": "string",
+                                                                        "format": "date-time",
+                                                                        "example": "2025-06-23T13:06:36+00:00"
+                                                                    },
+                                                                    "updated_at": {
+                                                                        "type": "string",
+                                                                        "format": "date-time",
+                                                                        "example": "2025-06-23T13:06:36+00:00"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "quantity": {
+                                                                "type": "integer",
+                                                                "example": 5
+                                                            },
+                                                            "unit_price": {
+                                                                "type": "string",
+                                                                "example": "227.60"
+                                                            },
+                                                            "total_price": {
+                                                                "type": "string",
+                                                                "example": "1138.00"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "shipped_at": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "delivered_at": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "canceled_at": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T14:55:05.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You must be authenticated to access this resource."
+                    },
+                    "404": {
+                        "description": "The order does not exist or is not available."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1.0.0/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "List active products (paginated)",
+                "description": "Display a paginated list of active products.",
+                "operationId": "c8ba846e2886ff66ff7c5002b79230fb",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of products per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated list of active products",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "ssd"
+                                                    },
+                                                    "sku": {
+                                                        "type": "string",
+                                                        "example": "SKU-22276"
+                                                    },
+                                                    "price": {
+                                                        "type": "string",
+                                                        "example": "333.00"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "11111111111111111",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-06-23T13:06:36+00:00"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-06-23T13:42:33+00:00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "links": {
+                                            "properties": {
+                                                "first": {
+                                                    "type": "string",
+                                                    "example": "http://e-commerce.test/api/v1.0.0/products?page=1"
+                                                },
+                                                "last": {
+                                                    "type": "string",
+                                                    "example": "http://e-commerce.test/api/v1.0.0/products?page=4"
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "example": "http://e-commerce.test/api/v1.0.0/products?page=2",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "from": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                },
+                                                "path": {
+                                                    "type": "string",
+                                                    "example": "http://e-commerce.test/api/v1.0.0/products"
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "to": {
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 52
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create a new product",
+                "description": "Store a newly created product in the database.",
+                "operationId": "f1cbc7a78d47d0b726e0c3ead8b5d3aa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "sku",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "product 44"
+                                    },
+                                    "sku": {
+                                        "type": "string",
+                                        "example": "SKU-345345"
+                                    },
+                                    "price": {
+                                        "type": "string",
+                                        "example": "333.23"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "adl sdh sdfh sdfuk sd k dfkL SDF  SDFKH SDKFD",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The product has been successfully created."
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 79
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "product 44"
+                                                },
+                                                "sku": {
+                                                    "type": "string",
+                                                    "example": "SKU-345345"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "333.23"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "adl sdh sdfh sdfuk sd k dfkL SDF  SDFKH SDKFD"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T18:14:44+00:00"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T18:14:44+00:00"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The sku has already been taken."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/v1.0.0/products/{sku}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get product details by SKU",
+                "description": "Show the details of a specific product.",
+                "operationId": "945f24fe0e72187e95f532d38694395a",
+                "parameters": [
+                    {
+                        "name": "sku",
+                        "in": "path",
+                        "description": "Product SKU",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "SKU-2227665"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 77
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "ssd"
+                                                },
+                                                "sku": {
+                                                    "type": "string",
+                                                    "example": "SKU-2227665"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "333.00"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "11111111111111111"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T13:39:20+00:00"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T13:53:41+00:00"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The requested product does not exist"
+                    },
+                    "401": {
+                        "description": "You must be authenticated to access this resource."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update a product by SKU",
+                "description": "Update the specified product in the database.",
+                "operationId": "55d89c1218d76c176090ef4e9c560a19",
+                "parameters": [
+                    {
+                        "name": "sku",
+                        "in": "path",
+                        "description": "SKU of the product to update",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "SKU-2227665D"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "sku",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "ssd"
+                                    },
+                                    "sku": {
+                                        "type": "string",
+                                        "example": "SKU-2227665D"
+                                    },
+                                    "price": {
+                                        "type": "string",
+                                        "example": "333.00"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Test",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The product has been successfully updated."
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 77
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "ssd"
+                                                },
+                                                "sku": {
+                                                    "type": "string",
+                                                    "example": "SKU-2227665D"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "333.00"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Test"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T13:39:20+00:00"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2025-06-23T18:18:33+00:00"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The sku has already been taken."
+                    },
+                    "404": {
+                        "description": "The requested product does not exist."
+                    },
+                    "403": {
+                        "description": "You must be authenticated to access this resource."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete a product by SKU",
+                "description": "Remove the specified product from the database.",
+                "operationId": "b3b23a0db205529d857d0050b22fd16b",
+                "parameters": [
+                    {
+                        "name": "sku",
+                        "in": "path",
+                        "description": "SKU of the product to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "SKU-345345"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The product has been successfully deleted."
+                                        },
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 200
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You must be authenticated to access this resource."
+                    },
+                    "404": {
+                        "description": "The requested product does not exist."
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ]
+}
