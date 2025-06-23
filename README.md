@@ -12,7 +12,7 @@ Este proyecto utiliza **Laravel 12** y hace uso de migraciones, seeders y colas 
 ## Instalación
 
 ```bash
-git clone https://github.com/tu-usuario/e-commerce.git
+git clone https://github.com/malavedr/e-commerce.git
 cd e-commerce
 composer install
 cp .env.example .env
