@@ -127,29 +127,55 @@ class User extends Authenticatable
         ]);
     }
 
+    /**
+     * Determine if the user is active.
+     *
+     * @return bool
+     */
     public function isActive(): bool
     {
         return $this->status === UserStatusEnum::ACTIVE;
     }
 
+    /**
+     * Check if the given user ID is the owner of this user instance.
+     *
+     * @param int $user_id
+     * @return bool
+     */
     public function isOwner($user_id): bool
     {
         return $this->id === $user_id;
     }
 
+    /**
+     * Check if the user has admin role.
+     *
+     * @return bool
+     */
     public function isAdmin(): bool
     {
         return $this->role === UserRoleEnum::ADMIN->value;
     }
 
+    /**
+     * Check if the user has one or more of the given roles.
+     *
+     * @param string|array $roles
+     * @return bool
+     */
     public function hasRole(string|array $roles): bool
     {
         return in_array($this->role, (array) $roles);
     }
 
+    /**
+     * Get the user's active delivery address.
+     *
+     * @return DeliveryAddress|null
+     */
     public function activeDeliveryAddress()
     {
         return $this->deliveryAddresses()->active()->first();
     }
-
 }

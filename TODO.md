@@ -12,7 +12,7 @@
 - Implementar laravel permission                                            LISTO
 
 # PENDIENTES
-- limpiar el resource de order
+- domentar el resto de archivos
 - Documentar en open api
 - enviar mail al crear una orden
 - implementar redis en otro sitio
@@ -20,6 +20,15 @@
 - validar bien el policy de orders
 
 # TERMINADOS
+- probar creacion de order con policy
+- probar show orden con policy
+- Probar product completo
+- Documentar product completo
+- limpiar el resource de order
+- Probar product completo
+- Documentar product completo
+- Probar bien auth
+- Comentar auth
 - Crear orden por api
 - Poder ver el detalle de una orden
 - Cambiar id de producto por sku

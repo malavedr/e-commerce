@@ -2,27 +2,69 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\OrderStatusEnum;
 use App\Models\Product;
 use App\Rules\StartsWithSku;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\OrderStatusEnum;
 use Illuminate\Support\Facades\Redis;
 
+/**
+ * Class StoreOrderRequest
+ *
+ * Handles validation and authorization for placing a new order.
+ * Validates notes and products data, including SKU format, existence, quantity, 
+ * and checks for active delivery address and duplicate orders.
+ *
+ * @package App\Http\Requests
+ */
 class StoreOrderRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool Always returns true, authorization handled elsewhere.
+     */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array Validation rules for notes and products with nested SKU and quantity constraints.
+     */
+    public function rules(): array
+    {
+        return [
+            'notes' => ['nullable', 'string'],
+            'products' => ['required', 'array', 'min:1'],
+            'products.*.sku' => ['required', 'distinct', 'exists:products,sku', new StartsWithSku()],
+            'products.*.quantity' => ['required', 'integer', 'min:1'],
+        ];
+    }
+
+    /**
+     * Prepare data for validation.
+     * Trims and uppercases SKU input.
+     *
+     * @return void
+     */
     protected function prepareForValidation(): void
     {
         $this->merge([
             'sku' => trim(strtoupper($this->input('sku'))),
         ]);
     }
-    
 
+    /**
+     * Configure the validator instance with additional custom validations.
+     * Checks for an active delivery address, product activity status,
+     * and prevents duplicate orders by locking using Redis.
+     *
+     * @param \Illuminate\Validation\Validator $validator
+     * @return void
+     */
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
@@ -49,7 +91,6 @@ class StoreOrderRequest extends FormRequest
                 }
             }
 
-            $user = $this->user();
             $productSkus = collect($this->input('products'))->pluck('sku')->sort()->values()->toArray();
             $productIds = Product::whereIn('sku', $productSkus)->pluck('id')->sort()->values()->toArray();
             
@@ -80,16 +121,11 @@ class StoreOrderRequest extends FormRequest
         });
     }
 
-    public function rules(): array
-    {
-        return [
-            'notes' => ['nullable', 'string'],
-            'products' => ['required', 'array', 'min:1'],
-            'products.*.sku' => ['required', 'distinct', 'exists:products,sku', new StartsWithSku()],
-            'products.*.quantity' => ['required', 'integer', 'min:1'],
-        ];
-    }
-
+    /**
+     * Custom error messages for validation failures.
+     *
+     * @return array
+     */
     public function messages(): array
     {
         return [

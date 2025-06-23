@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/me', [AuthController::class, 'me'])->name('me');
+    Route::get('/user', [AuthController::class, 'user'])->name('user');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
@@ -19,13 +19,15 @@ Route::prefix('v1.0.0')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-        Route::get('/product/{product}', [ProductController::class, 'show'])->name('products.show');
+        Route::prefix('products')->group(function () {
+            Route::get('/', [ProductController::class, 'index'])->name('products.index');
+            Route::get('/{sku}', [ProductController::class, 'show'])->name('products.show');
 
-        Route::middleware('role:admin')->group(function () {
-            Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-            Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
-            Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('products.destoy');
+            Route::middleware('role:admin')->group(function () {
+                Route::post('/', [ProductController::class, 'store'])->name('products.store');
+                Route::put('/{sku}', [ProductController::class, 'update'])->name('products.update');
+                Route::delete('/{sku}', [ProductController::class, 'destroy'])->name('products.destoy');
+            });
         });
 
         Route::prefix('orders')->group(function () {

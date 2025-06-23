@@ -16,5 +16,6 @@ return [
     'errors' => [
         'no_active_delivery_address' => 'You must have an active delivery address to place an order.',
         'duplicate_order' => 'You have already placed an order with the same products.',
+        'creation_failed' => 'Failed to create the order due to an internal error.',
     ],
 ];

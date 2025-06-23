@@ -2,18 +2,37 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\InvalidCredentialsException;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
-use App\Exceptions\InvalidCredentialsException;
 use App\Traits\HandlesApiResponses;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class AuthController
+ *
+ * Handles user authentication via API, including login, logout,
+ * and retrieval of the authenticated user's profile.
+ *
+ * @package App\Http\Controllers\Api
+ */
 class AuthController extends Controller
 {
     use HandlesApiResponses;
 
+    /**
+     * Authenticate a user and return an access token.
+     *
+     * Validates the user credentials, revokes any previous tokens,
+     * and issues a new one along with user information.
+     *
+     * @param  \App\Http\Requests\LoginRequest  $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \App\Exceptions\InvalidCredentialsException
+     */
     public function login(LoginRequest $request)
     {
         if (!Auth::attempt($request->validated())) {
@@ -31,6 +50,12 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Logout the authenticated user by revoking the current token.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
         $request->user()?->currentAccessToken()?->delete();
@@ -38,7 +63,13 @@ class AuthController extends Controller
         return $this->success(__('auth.logout_success'));
     }
 
-    public function me(Request $request)
+    /**
+     * Return the currently authenticated user's information.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function user(Request $request)
     {
         return $this->success(__('auth.profile_success'), new UserResource($request->user()));
     }
