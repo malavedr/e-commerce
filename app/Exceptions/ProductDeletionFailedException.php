@@ -4,8 +4,13 @@ namespace App\Exceptions;
 
 class ProductDeletionFailedException extends ApiException
 {
-    public function __construct(?array $errors = null)
+    public function __construct(?int $entity_id, ?array $errors = null)
     {
-        parent::__construct(__('exception.products.deletion_failed'), 500, $errors);
+        parent::__construct(
+            message: __('exception.products.deletion_failed'), 
+            status: 500,
+            errors: $errors,
+            entity_id: $entity_id,
+        );
     }
 }

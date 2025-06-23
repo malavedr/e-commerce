@@ -8,6 +8,7 @@ return [
         'creation_failed' => 'The product could not be created. Please try again later.',
         'update_failed' => 'Failed to update the product. Please try again later.',
         'deletion_failed' => 'The product could not be deleted. Please check the data and try again.',
+        'has_orders' => 'The product cannot be deleted because it has associated orders.',
     ],
 
     'orders' => [

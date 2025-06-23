@@ -2,12 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Contracts\ProductRepositoryInterface;
-use App\Models\Product;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Exceptions\ApiException;
 use App\Exceptions\ProductCreationFailedException;
-use App\Exceptions\ProductUpdateFailedException;
 use App\Exceptions\ProductDeletionFailedException;
+use App\Exceptions\ProductUpdateFailedException;
+use App\Exceptions\ProductWithOrdersException;
+use App\Models\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductRepository implements ProductRepositoryInterface
@@ -17,7 +18,7 @@ class ProductRepository implements ProductRepositoryInterface
         return Product::active()->paginate($perPage);
     }
 
-    public function findOrFail(int $id): Product
+    public function findOrFail($id): Product
     {
         return Product::find($id) ?? throw ApiException::fromKey('products.not_found', 404);
     }
@@ -39,7 +40,7 @@ class ProductRepository implements ProductRepositoryInterface
             $product->update($data);
             return $product->refresh();
         } catch (\Throwable $e) {
-            throw new ProductUpdateFailedException([
+            throw new ProductUpdateFailedException($product->id, [
                 'exception' => $e->getMessage(),
             ]);
         }
@@ -47,10 +48,14 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function delete(Product $product): void
     {
+        if ($product->items()->exists()) {
+            throw new ProductWithOrdersException($product->id);
+        }
+
         try {
             $product->delete();
         } catch (\Throwable $e) {
-            throw new ProductDeletionFailedException([
+            throw new ProductDeletionFailedException($product->id, [
                 'exception' => $e->getMessage(),
             ]);
         }

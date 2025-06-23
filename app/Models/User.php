@@ -3,16 +3,18 @@
 namespace App\Models;
 
 use App\Enums\UserStatusEnum;
+use App\Enums\UserRoleEnum;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The database table used by the model.
@@ -124,4 +126,30 @@ class User extends Authenticatable
             UserStatusEnum::BANNED->value,
         ]);
     }
+
+    public function isActive(): bool
+    {
+        return $this->status === UserStatusEnum::ACTIVE;
+    }
+
+    public function isOwner($user_id): bool
+    {
+        return $this->id === $user_id;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRoleEnum::ADMIN->value;
+    }
+
+    public function hasRole(string|array $roles): bool
+    {
+        return in_array($this->role, (array) $roles);
+    }
+
+    public function activeDeliveryAddress()
+    {
+        return $this->deliveryAddresses()->active()->first();
+    }
+
 }

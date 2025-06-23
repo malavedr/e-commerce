@@ -6,6 +6,10 @@ class ProductCreationFailedException extends ApiException
 {
     public function __construct(?array $errors = null)
     {
-        parent::__construct(__('exception.products.creation_failed'), 500, $errors);
+        parent::__construct(
+            message: __('exception.products.creation_failed'), 
+            status: 500,
+            errors: $errors,
+        );
     }
 }

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\DeliveryAddress;
 use App\Models\User;
 use App\Enums\UserStatusEnum;
+use App\Enums\UserRoleEnum;
 use App\Models\UserContact;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -41,9 +42,45 @@ class UserFactory extends Factory
             'billing_locality' => $this->faker->city(),
             'billing_zipcode' => $this->faker->postcode(),
             'status' => $this->faker->randomElement(UserStatusEnum::all()),
+            'role' => $this->faker->randomElement(UserRoleEnum::all()),
             'remember_token' => Str::random(10),
         ];
 
+    }
+
+    public function editor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRoleEnum::EDITOR->value,
+        ]);
+    }
+
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRoleEnum::ADMIN->value,
+        ]);
+    }
+
+    public function user(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRoleEnum::USER->value,
+        ]);
+    }
+
+    public function active(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserStatusEnum::ACTIVE->value,
+        ]);
+    }
+
+    public function suspended(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserStatusEnum::SUSPENDED->value,
+        ]);
     }
 
     /**
