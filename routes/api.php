@@ -18,6 +18,20 @@ Route::prefix('v1.0.0')->group(function () {
         return 'e-commerce el-diego v1.0.0';
     });
 
+    Route::get('/greeting', function (Request $request) {
+        $locale = $request->header('Accept-Language', 'en');
+        // Simple locale detection: if header contains 'es', use Spanish
+        $appLocale = str_contains($locale, 'es') ? 'es' : 'en';
+        app()->setLocale($appLocale);
+        
+        return response()->json([
+            'message' => __('app.greeting.hello'),
+            'welcome' => __('app.greeting.welcome'),
+            'locale' => app()->getLocale(),
+            'version' => 'v1.0.0'
+        ]);
+    });
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('products')->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('products.index');
